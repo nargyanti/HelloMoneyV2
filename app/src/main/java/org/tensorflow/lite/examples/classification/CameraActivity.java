@@ -87,10 +87,7 @@ public abstract class CameraActivity extends AppCompatActivity
       recognitionValueTextView,
       recognition1ValueTextView,
       recognition2ValueTextView;
-  protected TextView frameValueTextView,
-      cropValueTextView,
-      cameraResolutionTextView,
-      rotationTextView,
+  protected TextView
       inferenceTimeTextView;
   protected ImageView bottomSheetArrowImageView;
   private ImageView plusImageView, minusImageView;
@@ -179,11 +176,6 @@ public abstract class CameraActivity extends AppCompatActivity
     recognition1ValueTextView = findViewById(R.id.detected_item1_value);
     recognition2TextView = findViewById(R.id.detected_item2);
     recognition2ValueTextView = findViewById(R.id.detected_item2_value);
-
-    frameValueTextView = findViewById(R.id.frame_info);
-    cropValueTextView = findViewById(R.id.crop_info);
-    cameraResolutionTextView = findViewById(R.id.view_info);
-    rotationTextView = findViewById(R.id.rotation_info);
     inferenceTimeTextView = findViewById(R.id.inference_info);
 
     modelSpinner.setOnItemSelectedListener(this);
@@ -547,22 +539,6 @@ public abstract class CameraActivity extends AppCompatActivity
               String.format("%.2f", (100 * recognition2.getConfidence())) + "%");
       }
     }
-  }
-
-  protected void showFrameInfo(String frameInfo) {
-    frameValueTextView.setText(frameInfo);
-  }
-
-  protected void showCropInfo(String cropInfo) {
-    cropValueTextView.setText(cropInfo);
-  }
-
-  protected void showCameraResolution(String cameraInfo) {
-    cameraResolutionTextView.setText(cameraInfo);
-  }
-
-  protected void showRotationInfo(String rotation) {
-    rotationTextView.setText(rotation);
   }
 
   protected void showInference(String inferenceTime) {
