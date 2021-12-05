@@ -81,17 +81,11 @@ public abstract class CameraActivity extends AppCompatActivity
   private LinearLayout bottomSheetLayout;
   private LinearLayout gestureLayout;
   private BottomSheetBehavior<LinearLayout> sheetBehavior;
-  protected TextView recognitionTextView,
-      recognition1TextView,
-      recognition2TextView,
-      recognitionValueTextView,
-      recognition1ValueTextView,
-      recognition2ValueTextView;
+  protected TextView recognitionTextView;
   protected TextView
       inferenceTimeTextView;
   protected ImageView bottomSheetArrowImageView;
   private ImageView plusImageView, minusImageView;
-  private Spinner deviceSpinner;
   private TextView threadsTextView;
 
   private Model model = Model.QUANTIZED_MOBILENET;
@@ -168,11 +162,6 @@ public abstract class CameraActivity extends AppCompatActivity
         });
 
     recognitionTextView = findViewById(R.id.detected_item);
-    recognitionValueTextView = findViewById(R.id.detected_item_value);
-    recognition1TextView = findViewById(R.id.detected_item1);
-    recognition1ValueTextView = findViewById(R.id.detected_item1_value);
-    recognition2TextView = findViewById(R.id.detected_item2);
-    recognition2ValueTextView = findViewById(R.id.detected_item2_value);
     inferenceTimeTextView = findViewById(R.id.inference_info);
 
     plusImageView.setOnClickListener(this);
@@ -506,29 +495,10 @@ public abstract class CameraActivity extends AppCompatActivity
 
   @UiThread
   protected void showResultsInBottomSheet(List<Recognition> results) {
-    if (results != null && results.size() >= 3) {
+    if (results != null && results.size() >= 1) {
       Recognition recognition = results.get(0);
       if (recognition != null) {
         if (recognition.getTitle() != null) recognitionTextView.setText(recognition.getTitle());
-        if (recognition.getConfidence() != null)
-          recognitionValueTextView.setText(
-              String.format("%.2f", (100 * recognition.getConfidence())) + "%");
-      }
-
-      Recognition recognition1 = results.get(1);
-      if (recognition1 != null) {
-        if (recognition1.getTitle() != null) recognition1TextView.setText(recognition1.getTitle());
-        if (recognition1.getConfidence() != null)
-          recognition1ValueTextView.setText(
-              String.format("%.2f", (100 * recognition1.getConfidence())) + "%");
-      }
-
-      Recognition recognition2 = results.get(2);
-      if (recognition2 != null) {
-        if (recognition2.getTitle() != null) recognition2TextView.setText(recognition2.getTitle());
-        if (recognition2.getConfidence() != null)
-          recognition2ValueTextView.setText(
-              String.format("%.2f", (100 * recognition2.getConfidence())) + "%");
       }
     }
   }
