@@ -82,7 +82,6 @@ public abstract class CameraActivity extends AppCompatActivity
   private LinearLayout gestureLayout;
   private BottomSheetBehavior<LinearLayout> sheetBehavior;
   protected TextView recognitionTextView;
-  protected ImageView bottomSheetArrowImageView;
 
   private Model model = Model.QUANTIZED_MOBILENET;
   private Device device = Device.CPU;
@@ -105,7 +104,6 @@ public abstract class CameraActivity extends AppCompatActivity
     bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
     gestureLayout = findViewById(R.id.gesture_layout);
     sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
-    bottomSheetArrowImageView = findViewById(R.id.bottom_sheet_arrow);
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
@@ -134,18 +132,18 @@ public abstract class CameraActivity extends AppCompatActivity
                 break;
               case BottomSheetBehavior.STATE_EXPANDED:
                 {
-                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_down);
+
                 }
                 break;
               case BottomSheetBehavior.STATE_COLLAPSED:
                 {
-                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up);
+
                 }
                 break;
               case BottomSheetBehavior.STATE_DRAGGING:
                 break;
               case BottomSheetBehavior.STATE_SETTLING:
-                bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up);
+
                 break;
             }
           }
