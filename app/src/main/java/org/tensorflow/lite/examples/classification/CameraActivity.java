@@ -82,11 +82,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private LinearLayout gestureLayout;
   private BottomSheetBehavior<LinearLayout> sheetBehavior;
   protected TextView recognitionTextView;
-  protected TextView
-      inferenceTimeTextView;
   protected ImageView bottomSheetArrowImageView;
-  private ImageView plusImageView, minusImageView;
-  private TextView threadsTextView;
 
   private Model model = Model.QUANTIZED_MOBILENET;
   private Device device = Device.CPU;
@@ -106,9 +102,6 @@ public abstract class CameraActivity extends AppCompatActivity
       requestPermission();
     }
 
-    threadsTextView = findViewById(R.id.threads);
-    plusImageView = findViewById(R.id.plus);
-    minusImageView = findViewById(R.id.minus);
     bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
     gestureLayout = findViewById(R.id.gesture_layout);
     sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
@@ -162,12 +155,6 @@ public abstract class CameraActivity extends AppCompatActivity
         });
 
     recognitionTextView = findViewById(R.id.detected_item);
-    inferenceTimeTextView = findViewById(R.id.inference_info);
-
-    plusImageView.setOnClickListener(this);
-    minusImageView.setOnClickListener(this);
-
-    numThreads = Integer.parseInt(threadsTextView.getText().toString().trim());
   }
 
   protected int[] getRgbBytes() {
@@ -503,10 +490,6 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
-  protected void showInference(String inferenceTime) {
-    inferenceTimeTextView.setText(inferenceTime);
-  }
-
   protected Model getModel() {
     return model;
   }
@@ -520,9 +503,6 @@ public abstract class CameraActivity extends AppCompatActivity
       LOGGER.d("Updating  device: " + device);
       this.device = device;
       final boolean threadsEnabled = device == Device.CPU;
-      plusImageView.setEnabled(threadsEnabled);
-      minusImageView.setEnabled(threadsEnabled);
-      threadsTextView.setText(threadsEnabled ? String.valueOf(numThreads) : "N/A");
       onInferenceConfigurationChanged();
     }
   }
@@ -551,21 +531,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   @Override
   public void onClick(View v) {
-    if (v.getId() == R.id.plus) {
-      String threads = threadsTextView.getText().toString().trim();
-      int numThreads = Integer.parseInt(threads);
-      if (numThreads >= 9) return;
-      setNumThreads(++numThreads);
-      threadsTextView.setText(String.valueOf(numThreads));
-    } else if (v.getId() == R.id.minus) {
-      String threads = threadsTextView.getText().toString().trim();
-      int numThreads = Integer.parseInt(threads);
-      if (numThreads == 1) {
-        return;
-      }
-      setNumThreads(--numThreads);
-      threadsTextView.setText(String.valueOf(numThreads));
-    }
+
   }
 
   @Override

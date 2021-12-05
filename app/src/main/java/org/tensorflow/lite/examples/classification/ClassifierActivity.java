@@ -101,7 +101,6 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
                     @Override
                     public void run() {
                       showResultsInBottomSheet(results);
-                      showInference(lastProcessingTimeMs + "ms");
                     }
                   });
             }
