@@ -77,7 +77,6 @@ public abstract class CameraActivity extends AppCompatActivity
   private Runnable postInferenceCallback;
   private Runnable imageConverter;
   private LinearLayout bottomSheetLayout;
-  private LinearLayout gestureLayout;
   protected TextView recognitionTextView;
 
   private Model model = Model.QUANTIZED_MOBILENET;
@@ -99,23 +98,6 @@ public abstract class CameraActivity extends AppCompatActivity
     }
 
     bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
-    gestureLayout = findViewById(R.id.gesture_layout);
-
-    ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
-    vto.addOnGlobalLayoutListener(
-        new ViewTreeObserver.OnGlobalLayoutListener() {
-          @Override
-          public void onGlobalLayout() {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-              gestureLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            } else {
-              gestureLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-            //                int width = bottomSheetLayout.getMeasuredWidth();
-            int height = gestureLayout.getMeasuredHeight();
-
-          }
-        });
     recognitionTextView = findViewById(R.id.detected_item);
   }
 

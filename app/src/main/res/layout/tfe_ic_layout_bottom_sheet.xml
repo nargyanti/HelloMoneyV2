@@ -8,8 +8,7 @@
     android:background="@drawable/bottom_sheet_bg"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="8dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    android:padding="8dp">
 
     <LinearLayout
         android:id="@+id/gesture_layout"
