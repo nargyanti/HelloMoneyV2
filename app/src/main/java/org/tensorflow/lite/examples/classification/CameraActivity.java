@@ -43,12 +43,10 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.nio.ByteBuffer;
 import java.util.List;
 import org.tensorflow.lite.examples.classification.env.ImageUtils;
@@ -80,7 +78,6 @@ public abstract class CameraActivity extends AppCompatActivity
   private Runnable imageConverter;
   private LinearLayout bottomSheetLayout;
   private LinearLayout gestureLayout;
-  private BottomSheetBehavior<LinearLayout> sheetBehavior;
   protected TextView recognitionTextView;
 
   private Model model = Model.QUANTIZED_MOBILENET;
@@ -103,7 +100,6 @@ public abstract class CameraActivity extends AppCompatActivity
 
     bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
     gestureLayout = findViewById(R.id.gesture_layout);
-    sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
@@ -118,40 +114,8 @@ public abstract class CameraActivity extends AppCompatActivity
             //                int width = bottomSheetLayout.getMeasuredWidth();
             int height = gestureLayout.getMeasuredHeight();
 
-            sheetBehavior.setPeekHeight(height);
           }
         });
-    sheetBehavior.setHideable(false);
-
-    sheetBehavior.setBottomSheetCallback(
-        new BottomSheetBehavior.BottomSheetCallback() {
-          @Override
-          public void onStateChanged(@NonNull View bottomSheet, int newState) {
-            switch (newState) {
-              case BottomSheetBehavior.STATE_HIDDEN:
-                break;
-              case BottomSheetBehavior.STATE_EXPANDED:
-                {
-
-                }
-                break;
-              case BottomSheetBehavior.STATE_COLLAPSED:
-                {
-
-                }
-                break;
-              case BottomSheetBehavior.STATE_DRAGGING:
-                break;
-              case BottomSheetBehavior.STATE_SETTLING:
-
-                break;
-            }
-          }
-
-          @Override
-          public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
-        });
-
     recognitionTextView = findViewById(R.id.detected_item);
   }
 
