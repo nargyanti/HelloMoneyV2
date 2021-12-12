@@ -48,9 +48,9 @@ public class ClassifierTest {
   public ActivityTestRule<ClassifierActivity> rule =
       new ActivityTestRule<>(ClassifierActivity.class);
 
-  private static final String[] INPUTS = {"fox.jpg"};
-  private static final String[] GOLDEN_OUTPUTS_SUPPORT = {"fox-mobilenet_v1_1.0_224_support.txt"};
-  private static final String[] GOLDEN_OUTPUTS_TASK = {"fox-mobilenet_v1_1.0_224_task_api.txt"};
+  private static final String[] INPUTS = {"limaribu.jpeg"};
+  private static final String[] GOLDEN_OUTPUTS_SUPPORT = {"limaribu.txt"};
+  private static final String[] GOLDEN_OUTPUTS_TASK = {"limaribu_task.txt"};
 
   @Test
   public void classificationResultsShouldNotChange() throws IOException {
@@ -59,27 +59,19 @@ public class ClassifierTest {
     for (int i = 0; i < INPUTS.length; i++) {
       String imageFileName = INPUTS[i];
       String goldenOutputFileName;
-      // TODO(b/169379396): investigate the impact of the resize algorithm on accuracy.
-      // This is a temporary workaround to set different golden rest results as the preprocessing
-      // of lib_support and lib_task_api are different. Will merge them once the above TODO is
-      // resolved.
-      if (Classifier.TAG.equals("ClassifierWithSupport")) {
-        goldenOutputFileName = GOLDEN_OUTPUTS_SUPPORT[i];
-      } else {
-        goldenOutputFileName = GOLDEN_OUTPUTS_TASK[i];
-      }
+
+      goldenOutputFileName = GOLDEN_OUTPUTS_SUPPORT[i];
+
       Bitmap input = loadImage(imageFileName);
       List<Recognition> goldenOutput = loadRecognitions(goldenOutputFileName);
 
       List<Recognition> result = classifier.recognizeImage(input, 0);
       Iterator<Recognition> goldenOutputIterator = goldenOutput.iterator();
 
-      for (Recognition actual : result) {
-        Assert.assertTrue(goldenOutputIterator.hasNext());
-        Recognition expected = goldenOutputIterator.next();
-        assertThat(actual.getTitle()).isEqualTo(expected.getTitle());
-        assertThat(actual.getConfidence()).isWithin(0.01f).of(expected.getConfidence());
-      }
+      Assert.assertTrue(goldenOutputIterator.hasNext());
+      Recognition expected = goldenOutputIterator.next();
+      assertThat(result.get(0).getTitle()).isEqualTo(expected.getTitle());
+      assertThat(result.get(0).getConfidence()).isWithin(0.01f).of(expected.getConfidence());
     }
   }
 
