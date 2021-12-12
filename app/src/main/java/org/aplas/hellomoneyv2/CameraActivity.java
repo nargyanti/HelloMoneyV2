@@ -29,6 +29,7 @@ import android.media.Image;
 import android.media.Image.Plane;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -80,6 +81,9 @@ public abstract class CameraActivity extends AppCompatActivity
   private Model model = Model.QUANTIZED_MOBILENET;
   private Device device = Device.CPU;
   private int numThreads = -1;
+  MediaPlayer mp1k, mp2k, mp5k, mp10k, mp20k, mp50k, mp100k;
+  boolean isSeribu = false, isDuaribu = false, isLimaribu = false, isSepuluhribu = false,
+          isDuapuluhribu = false, isLimapuluhribu = false, isSeratusribu = false;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -235,6 +239,14 @@ public abstract class CameraActivity extends AppCompatActivity
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
+
+    mp1k = MediaPlayer.create(this, R.raw.seribu);
+    mp2k = MediaPlayer.create(this, R.raw.duaribu);
+    mp5k = MediaPlayer.create(this, R.raw.limaribu);
+    mp10k = MediaPlayer.create(this, R.raw.sepuluhribu);
+    mp20k = MediaPlayer.create(this, R.raw.duapuluhribu);
+    mp50k = MediaPlayer.create(this, R.raw.limapuluhribu);
+    mp100k = MediaPlayer.create(this, R.raw.seratusribu);
   }
 
   @Override
@@ -428,6 +440,75 @@ public abstract class CameraActivity extends AppCompatActivity
       Recognition recognition = results.get(0);
       if (recognition != null) {
         if (recognition.getTitle() != null) recognitionTextView.setText(recognition.getTitle());
+        float confi = 100 * recognition.getConfidence();
+        try {
+          if(!isSeribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp1.000") && confi > 80) {
+            mp1k.start();
+            isSeribu = true;
+            isDuaribu = false;
+            isLimaribu = false;
+            isSepuluhribu = false;
+            isDuapuluhribu = false;
+            isLimapuluhribu = false;
+            isSeratusribu = false;
+          } else if(!isDuaribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp2.000") && confi > 80) {
+            mp2k.start();
+            isSeribu = false;
+            isDuaribu = true;
+            isLimaribu = false;
+            isSepuluhribu = false;
+            isDuapuluhribu = false;
+            isLimapuluhribu = false;
+            isSeratusribu = false;
+          } else if(!isLimaribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp5.000") && confi > 80) {
+            mp5k.start();
+            isSeribu = false;
+            isDuaribu = false;
+            isLimaribu = true;
+            isSepuluhribu = false;
+            isDuapuluhribu = false;
+            isLimapuluhribu = false;
+            isSeratusribu = false;
+          } else if(!isSepuluhribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp10.000") && confi > 80) {
+            mp10k.start();
+            isSeribu = false;
+            isDuaribu = false;
+            isLimaribu = false;
+            isSepuluhribu = true;
+            isDuapuluhribu = false;
+            isLimapuluhribu = false;
+            isSeratusribu = false;
+          } else if(!isDuapuluhribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp20.000") && confi > 80) {
+            mp20k.start();
+            isSeribu = false;
+            isDuaribu = true;
+            isLimaribu = false;
+            isSepuluhribu = false;
+            isDuapuluhribu = true;
+            isLimapuluhribu = false;
+            isSeratusribu = false;
+          } else if(!isLimapuluhribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp50.000") && confi > 80) {
+            mp50k.start();
+            isSeribu = false;
+            isDuaribu = false;
+            isLimaribu = false;
+            isSepuluhribu = false;
+            isDuapuluhribu = false;
+            isLimapuluhribu = true;
+            isSeratusribu = false;
+          } else if(!isSeratusribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp100.000") && confi > 80) {
+            mp100k.start();
+            isSeribu = false;
+            isDuaribu = false;
+            isLimaribu = false;
+            isSepuluhribu = false;
+            isDuapuluhribu = false;
+            isLimapuluhribu = false;
+            isSeratusribu = true;
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
       }
     }
   }

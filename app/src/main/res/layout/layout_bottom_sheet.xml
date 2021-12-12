@@ -8,7 +8,7 @@
     android:background="@drawable/bottom_sheet_bg"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="20dp"
+    android:padding="10dp"
     android:layout_marginVertical="30dp"
     android:layout_marginHorizontal="10dp">
 
@@ -16,11 +16,12 @@
         android:id="@+id/detected_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="@color/white"
+        android:background="@color/color_primary"
         android:textSize="60sp"
         android:textStyle="bold"
         android:textAlignment="center"
         android:layout_gravity="center"
-        android:text="Rp500.000"/>
+        android:padding="10dp"/>
 
 </LinearLayout>
