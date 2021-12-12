@@ -17,8 +17,11 @@
 package org.aplas.hellomoneyv2;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
@@ -37,10 +40,12 @@ import android.os.HandlerThread;
 import android.os.Trace;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Size;
+import android.view.Gravity;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,7 +86,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private Model model = Model.QUANTIZED_MOBILENET;
   private Device device = Device.CPU;
   private int numThreads = -1;
-  MediaPlayer mp1k, mp2k, mp5k, mp10k, mp20k, mp50k, mp100k;
+  MediaPlayer panduan, mp1k, mp2k, mp5k, mp10k, mp20k, mp50k, mp100k;
   boolean isSeribu = false, isDuaribu = false, isLimaribu = false, isSepuluhribu = false,
           isDuapuluhribu = false, isLimapuluhribu = false, isSeratusribu = false;
 
@@ -101,6 +106,51 @@ public abstract class CameraActivity extends AppCompatActivity
 
     bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
     recognitionTextView = findViewById(R.id.detected_item);
+
+    panduan.create(CameraActivity.this, R.raw.panduan).start();
+    AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
+    builder.setMessage("Arahkan kamera Anda ke uang yang ingin anda pindai.\n\nAplikasi akan menyebutkan nominal uang Anda.");
+
+    // set the positive button to do some actions
+    builder.setNeutralButton("Tutup Panduan", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+      }
+    });
+
+    // show the alert dialog
+    AlertDialog alertDialog = builder.create();
+    alertDialog.show();
+    TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+    textView.setTextSize(30);
+    textView.setGravity(Gravity.CENTER);
+
+    // Set dismiss button to match parent
+    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); //create a new one
+    layoutParams.weight = 1.0f;
+    layoutParams.gravity = Gravity.CENTER; //this is layout_gravity
+    alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setLayoutParams(layoutParams);
+
+    // Hide after some seconds
+    final Handler handler  = new Handler();
+    final Runnable runnable = new Runnable() {
+      @Override
+      public void run() {
+        if (alertDialog.isShowing()) {
+          alertDialog.dismiss();
+        }
+      }
+    };
+
+    alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      @Override
+      public void onDismiss(DialogInterface dialog) {
+        handler.removeCallbacks(runnable);
+      }
+    });
+
+    handler.postDelayed(runnable, 4000);
   }
 
   protected int[] getRgbBytes() {
@@ -426,7 +476,7 @@ public abstract class CameraActivity extends AppCompatActivity
       case Surface.ROTATION_270:
         return 270;
       case Surface.ROTATION_180:
-        return 180;
+        return 185;
       case Surface.ROTATION_90:
         return 90;
       default:
@@ -442,7 +492,7 @@ public abstract class CameraActivity extends AppCompatActivity
         if (recognition.getTitle() != null) recognitionTextView.setText(recognition.getTitle());
         float confi = 100 * recognition.getConfidence();
         try {
-          if(!isSeribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp1.000") && confi > 80) {
+          if(!isSeribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp1.000") && confi > 85) {
             mp1k.start();
             isSeribu = true;
             isDuaribu = false;
@@ -451,7 +501,7 @@ public abstract class CameraActivity extends AppCompatActivity
             isDuapuluhribu = false;
             isLimapuluhribu = false;
             isSeratusribu = false;
-          } else if(!isDuaribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp2.000") && confi > 80) {
+          } else if(!isDuaribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp2.000") && confi > 85) {
             mp2k.start();
             isSeribu = false;
             isDuaribu = true;
@@ -460,7 +510,7 @@ public abstract class CameraActivity extends AppCompatActivity
             isDuapuluhribu = false;
             isLimapuluhribu = false;
             isSeratusribu = false;
-          } else if(!isLimaribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp5.000") && confi > 80) {
+          } else if(!isLimaribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp5.000") && confi > 85) {
             mp5k.start();
             isSeribu = false;
             isDuaribu = false;
@@ -469,7 +519,7 @@ public abstract class CameraActivity extends AppCompatActivity
             isDuapuluhribu = false;
             isLimapuluhribu = false;
             isSeratusribu = false;
-          } else if(!isSepuluhribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp10.000") && confi > 80) {
+          } else if(!isSepuluhribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp10.000") && confi > 85) {
             mp10k.start();
             isSeribu = false;
             isDuaribu = false;
@@ -478,7 +528,7 @@ public abstract class CameraActivity extends AppCompatActivity
             isDuapuluhribu = false;
             isLimapuluhribu = false;
             isSeratusribu = false;
-          } else if(!isDuapuluhribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp20.000") && confi > 80) {
+          } else if(!isDuapuluhribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp20.000") && confi > 85) {
             mp20k.start();
             isSeribu = false;
             isDuaribu = true;
@@ -487,7 +537,7 @@ public abstract class CameraActivity extends AppCompatActivity
             isDuapuluhribu = true;
             isLimapuluhribu = false;
             isSeratusribu = false;
-          } else if(!isLimapuluhribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp50.000") && confi > 80) {
+          } else if(!isLimapuluhribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp50.000") && confi > 85) {
             mp50k.start();
             isSeribu = false;
             isDuaribu = false;
@@ -496,7 +546,7 @@ public abstract class CameraActivity extends AppCompatActivity
             isDuapuluhribu = false;
             isLimapuluhribu = true;
             isSeratusribu = false;
-          } else if(!isSeratusribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp100.000") && confi > 80) {
+          } else if(!isSeratusribu && recognitionTextView.getText().toString().equalsIgnoreCase("Rp100.000") && confi > 85) {
             mp100k.start();
             isSeribu = false;
             isDuaribu = false;
